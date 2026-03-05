@@ -1,0 +1,1251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+<title>나의 정치란 무엇인가 탐구</title>
+<style>
+:root {
+  --bg: #EEF5FF;
+  --bg-card: #FFFFFF;
+  --bg-dark: #0B1E38;
+  --blue: #0284C7;
+  --blue-dark: #0369A1;
+  --green: #059669;
+  --yellow: #D97706;
+  --red: #DC2626;
+  --white: #FFFFFF;
+  --text: #0C1E35;
+  --text-sub: #4A6B8E;
+  --glass-border: rgba(2, 132, 199, 0.18);
+  --shadow: 0 2px 10px rgba(2, 100, 200, 0.09);
+  --shadow-md: 0 4px 20px rgba(2, 100, 200, 0.13);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+html { font-size: 16px; }
+body {
+  font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  background-color: var(--bg);
+  background-image: radial-gradient(rgba(2, 132, 199, 0.07) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--text);
+  min-height: 100vh; overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+/* ── SCREENS ── */
+.screen { display: none; min-height: 100vh; flex-direction: column; }
+.screen.active { display: flex; }
+
+/* ── HEADER ── */
+.header {
+  background: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue) 100%);
+  color: var(--white);
+  padding: 12px 16px; flex-shrink: 0;
+}
+.header-phase { font-size: 0.72em; font-weight: 800; letter-spacing: 1.5px; text-transform: uppercase; color: rgba(255,255,255,0.72); }
+.header h2 { font-size: 1.2em; font-weight: 900; line-height: 1.3; color: var(--white); }
+
+/* ── PROGRESS ── */
+.progress-wrap {
+  background: var(--white);
+  border-bottom: 1px solid var(--glass-border);
+  padding: 9px 16px;
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(2,100,200,0.07);
+}
+.progress-steps { display: flex; gap: 6px; flex: 1; }
+.progress-step { flex: 1; height: 5px; border-radius: 3px; background: rgba(2,132,199,0.14); transition: background 0.4s; }
+.progress-step.done { background: var(--green); }
+.progress-step.active { background: var(--blue); }
+.progress-label { font-size: 0.75em; color: var(--text-sub); white-space: nowrap; font-weight: 700; }
+.back-btn {
+  background: none; border: none; color: var(--blue);
+  font-size: 0.82em; cursor: pointer; padding: 4px 0; font-weight: 700;
+  display: flex; align-items: center; gap: 4px; white-space: nowrap;
+  touch-action: manipulation;
+}
+.back-btn:active { color: var(--yellow); }
+
+/* ── BODY ── */
+.body { flex: 1; overflow-y: auto; padding: 16px; -webkit-overflow-scrolling: touch; }
+
+/* ── BUTTONS ── */
+.btn {
+  display: block; width: 100%; max-width: 340px; margin: 0 auto;
+  background: var(--blue); color: var(--white);
+  border: none; border-radius: 30px; padding: 14px 24px;
+  font-size: 1.05em; font-weight: 800; cursor: pointer; letter-spacing: 0.5px;
+  transition: transform 0.1s, opacity 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 16px rgba(2,132,199,0.3);
+  touch-action: manipulation;
+}
+.btn:active { transform: scale(0.97); opacity: 0.88; }
+.btn.ghost {
+  background: var(--white); color: var(--blue);
+  border: 2px solid var(--blue); box-shadow: none;
+}
+
+/* ── WELCOME ── */
+#screen-0 {
+  background: linear-gradient(160deg, #EEF5FF 0%, #E0EEFB 100%);
+  background-image: none;
+}
+#screen-0 .body {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  text-align: center; gap: 18px; padding: 24px 20px;
+}
+.welcome-icon { font-size: 3.5em; }
+.welcome-title {
+  font-size: 1.9em; font-weight: 900; line-height: 1.25;
+  color: var(--blue-dark);
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 38%, var(--green) 70%, var(--yellow) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.welcome-sub { font-size: 0.95em; line-height: 1.7; color: var(--text-sub); }
+.steps-card {
+  background: var(--bg-card);
+  border: 1px solid var(--glass-border);
+  border-left: 4px solid var(--blue);
+  border-radius: 14px; padding: 16px 20px;
+  width: 100%; max-width: 360px; text-align: left;
+  box-shadow: var(--shadow);
+}
+.steps-card li {
+  list-style: none; padding: 7px 0;
+  border-bottom: 1px solid rgba(2,132,199,0.1);
+  font-size: 0.88em; display: flex; align-items: flex-start; gap: 10px;
+  color: var(--text);
+}
+.steps-card li:last-child { border-bottom: none; }
+.step-num {
+  background: var(--yellow); color: var(--white);
+  font-weight: 800; font-size: 0.8em; width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px;
+}
+.welcome-result-note {
+  font-size: 0.82em; color: var(--text-sub);
+  background: var(--bg-card); border: 1px solid var(--glass-border);
+  border-radius: 10px; padding: 9px 14px; max-width: 360px; width: 100%;
+  box-shadow: var(--shadow);
+}
+
+/* ── PHILOSOPHER (STEP 1) ── */
+.phil-intro { font-size: 0.85em; color: var(--text-sub); margin-bottom: 10px; line-height: 1.5; }
+.sel-counter-bar { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.sel-counter {
+  background: var(--bg-card); border: 1px solid var(--glass-border);
+  border-radius: 20px; padding: 4px 12px; font-size: 0.82em;
+  display: flex; align-items: center; gap: 6px;
+  box-shadow: var(--shadow); color: var(--text);
+}
+.sel-dots { display: flex; gap: 4px; }
+.sel-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(2,132,199,0.15); transition: background 0.25s; }
+.sel-dot.filled { background: var(--yellow); }
+.sel-hint { font-size: 0.75em; color: var(--text-sub); }
+
+.phil-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 14px; }
+.phil-card {
+  background: var(--bg-card); border: 2px solid transparent;
+  border-radius: 10px; padding: 10px 9px;
+  cursor: pointer; transition: all 0.15s; position: relative;
+  box-shadow: var(--shadow);
+  touch-action: manipulation;
+}
+.phil-card.selected {
+  border-color: var(--yellow); background: #FFFBEB;
+  box-shadow: var(--shadow), 0 0 0 2px rgba(217,119,6,0.18);
+}
+.phil-card.dimmed { opacity: 0.35; pointer-events: none; }
+.phil-check { display: none; position: absolute; top: 5px; right: 7px; color: var(--yellow); font-size: 0.85em; font-weight: 900; }
+.phil-card.selected .phil-check { display: block; }
+.phil-name { font-weight: 800; font-size: 0.88em; color: var(--blue-dark); margin-bottom: 4px; }
+.phil-def { font-size: 0.7em; line-height: 1.45; color: var(--text-sub); }
+
+.sel-section {
+  display: none;
+  background: #FFFBEB; border: 1px solid rgba(217,119,6,0.28);
+  border-radius: 12px; padding: 14px; margin-bottom: 14px;
+}
+.sel-section.visible { display: block; }
+.sel-section-title { font-size: 0.8em; font-weight: 800; color: var(--yellow); margin-bottom: 10px; letter-spacing: 0.5px; }
+.reason-item { margin-bottom: 14px; }
+.reason-item:last-child { margin-bottom: 0; }
+.reason-phil-name { font-size: 0.88em; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+.reason-phil-def-small { font-size: 0.74em; color: var(--text-sub); margin-bottom: 7px; }
+
+/* ── SHARED: REASON TEXTAREA ── */
+.reason-group { margin-top: 12px; }
+.reason-label { font-size: 0.76em; color: var(--yellow); font-weight: 700; margin-bottom: 5px; letter-spacing: 0.3px; }
+.reason-textarea {
+  width: 100%; background: var(--bg);
+  border: 1.5px solid var(--glass-border); border-radius: 8px;
+  color: var(--text);
+  font-size: 16px; /* iOS 자동 확대(줌) 방지 — 16px 미만이면 Safari가 자동 확대함 */
+  padding: 9px 11px;
+  font-family: inherit; resize: none; line-height: 1.5;
+  transition: border-color 0.2s;
+  -webkit-appearance: none;
+}
+.reason-textarea:focus { outline: none; border-color: var(--blue); }
+.reason-textarea::placeholder { color: var(--text-sub); opacity: 0.6; }
+
+/* ── QUESTIONS (STEP 2) ── */
+.q-meta { font-size: 0.78em; color: var(--text-sub); margin-bottom: 5px; letter-spacing: 0.5px; }
+.q-label {
+  display: inline-block; background: var(--green); color: var(--white);
+  font-size: 0.72em; font-weight: 700; padding: 2px 9px;
+  border-radius: 20px; margin-bottom: 10px; letter-spacing: 0.5px;
+}
+.q-text { font-size: 1.12em; font-weight: 800; line-height: 1.5; margin-bottom: 18px; color: var(--text); }
+.options { display: flex; flex-direction: column; gap: 11px; }
+.opt-btn {
+  background: var(--bg-card); border: 2px solid var(--glass-border);
+  border-radius: 12px; padding: 14px 16px;
+  color: var(--text); text-align: left; cursor: pointer;
+  transition: all 0.15s; font-size: 0.95em; line-height: 1.5;
+  box-shadow: var(--shadow);
+  touch-action: manipulation;
+}
+.opt-btn.selected {
+  border-color: var(--yellow); background: #FFFBEB;
+  box-shadow: var(--shadow), 0 0 0 2px rgba(217,119,6,0.15);
+}
+.opt-badge {
+  display: inline-block; background: var(--yellow); color: var(--white);
+  font-weight: 800; font-size: 0.78em; padding: 1px 8px;
+  border-radius: 20px; margin-bottom: 5px; letter-spacing: 0.5px;
+}
+.q-nav-row { display: flex; gap: 10px; margin-top: 16px; }
+.q-nav-row .btn { flex: 1; max-width: none; }
+
+/* ── BUILDER (STEP 3) ── */
+.builder-intro { font-size: 0.85em; color: var(--text-sub); margin-bottom: 16px; line-height: 1.5; }
+.el-group { margin-bottom: 22px; }
+.el-label { font-size: 0.8em; font-weight: 800; color: var(--blue-dark); margin-bottom: 8px; letter-spacing: 0.5px; }
+.el-opts { display: flex; flex-direction: column; gap: 7px; }
+.el-opt {
+  background: var(--bg-card); border: 2px solid transparent;
+  border-radius: 10px; padding: 11px 14px;
+  cursor: pointer; font-size: 0.88em; line-height: 1.45;
+  transition: all 0.15s; position: relative;
+  box-shadow: var(--shadow); color: var(--text);
+  touch-action: manipulation;
+}
+.el-opt.selected {
+  border-color: var(--yellow); background: #FFFBEB;
+  box-shadow: var(--shadow), 0 0 0 2px rgba(217,119,6,0.15);
+}
+.el-opt.selected::after {
+  content: "✓"; position: absolute; right: 12px; top: 50%;
+  transform: translateY(-50%); color: var(--yellow); font-weight: 800;
+}
+
+/* ── SCENARIOS (STEP 4) ── */
+.scenarios-intro { font-size: 0.85em; color: var(--text-sub); margin-bottom: 14px; line-height: 1.55; }
+.scenario-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--glass-border);
+  border-radius: 14px; padding: 14px 15px; margin-bottom: 12px;
+  box-shadow: var(--shadow);
+}
+.scenario-header { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
+.scenario-icon { font-size: 1.3em; }
+.scenario-title { font-weight: 800; font-size: 0.92em; color: var(--blue-dark); }
+.scenario-desc { font-size: 0.86em; line-height: 1.55; color: var(--text-sub); margin-bottom: 12px; }
+.scenario-judge-row { display: flex; gap: 8px; }
+.judge-btn {
+  flex: 1; border-radius: 10px; padding: 10px 6px;
+  font-size: 0.88em; font-weight: 700;
+  border: 1.5px solid var(--glass-border);
+  cursor: pointer; transition: all 0.15s;
+  background: var(--bg); color: var(--text-sub);
+  touch-action: manipulation;
+  min-height: 44px;
+}
+.judge-btn.selected-yes {
+  border-color: var(--green); background: rgba(5,150,105,0.08);
+  color: var(--green); box-shadow: 0 0 0 2px rgba(5,150,105,0.12);
+}
+.judge-btn.selected-no {
+  border-color: var(--red); background: rgba(220,38,38,0.07);
+  color: var(--red); box-shadow: 0 0 0 2px rgba(220,38,38,0.1);
+}
+
+/* ── REFLECTION (STEP 5) ── */
+.reflect-intro { font-size: 0.85em; color: var(--text-sub); margin-bottom: 20px; line-height: 1.55; }
+.reflect-group { margin-bottom: 20px; }
+.reflect-q { font-size: 0.97em; font-weight: 800; color: var(--text); margin-bottom: 8px; line-height: 1.4; }
+
+/* ── RESULT CARD ── */
+.result-outer {
+  background: var(--bg-card);
+  border: 2px solid var(--blue);
+  box-shadow: var(--shadow-md);
+  border-radius: 18px; padding: 20px 17px; margin-bottom: 14px;
+}
+.result-top { text-align: center; margin-bottom: 18px; }
+.result-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue) 50%, var(--green) 100%);
+  color: var(--white);
+  font-size: 2em; font-weight: 900; letter-spacing: 5px;
+  padding: 8px 22px; border-radius: 10px; margin-bottom: 8px;
+}
+.result-nickname { font-size: 1em; font-weight: 700; color: var(--green); margin-bottom: 4px; }
+.result-tag-row { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; margin-top: 8px; }
+.result-tag {
+  background: var(--bg); border: 1px solid var(--glass-border);
+  font-size: 0.7em; padding: 3px 9px; border-radius: 20px; color: var(--text-sub);
+}
+
+.r-section {
+  background: var(--bg); border: 1px solid var(--glass-border);
+  border-radius: 10px; padding: 13px 14px; margin-bottom: 10px;
+}
+.r-sec-title { font-size: 0.72em; font-weight: 800; color: var(--blue); letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+
+.phil-match-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border); }
+.phil-match-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.phil-match-name { font-size: 0.9em; font-weight: 700; color: var(--green); margin-bottom: 2px; }
+.phil-match-def { font-size: 0.76em; color: var(--text-sub); margin-bottom: 5px; line-height: 1.4; }
+.phil-match-reason { font-size: 0.82em; line-height: 1.5; background: var(--bg-card); border: 1px solid rgba(5,150,105,0.18); border-radius: 6px; padding: 6px 9px; color: var(--text); }
+.phil-match-reason-label { font-size: 0.75em; color: var(--yellow); font-weight: 700; margin-bottom: 3px; }
+
+.type-dims { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 8px; }
+.type-dim-item { background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 7px; padding: 7px 9px; font-size: 0.78em; line-height: 1.45; color: var(--text); }
+.type-dim-label { color: var(--blue); font-weight: 700; font-size: 0.85em; }
+
+.mini-reason {
+  background: var(--bg-card); border: 1px solid var(--glass-border);
+  border-radius: 7px; padding: 7px 10px; margin-bottom: 6px; font-size: 0.8em; line-height: 1.55; color: var(--text);
+}
+.mini-reason:last-child { margin-bottom: 0; }
+.mini-reason-dim { color: var(--yellow); font-weight: 700; margin-right: 5px; font-size: 0.82em; }
+
+.build-reason-item {
+  background: var(--bg-card); border: 1px solid rgba(5,150,105,0.18);
+  border-radius: 8px; padding: 9px 11px; margin-top: 8px;
+  font-size: 0.82em; line-height: 1.55; color: var(--text);
+}
+.build-reason-el { color: var(--yellow); font-weight: 700; font-size: 0.82em; margin-bottom: 3px; }
+.build-choice { color: var(--text-sub); font-size: 0.85em; margin-bottom: 3px; font-style: italic; }
+
+.my-def { font-size: 0.88em; line-height: 1.8; font-style: italic; color: var(--text); margin-bottom: 8px; }
+.result-footer { text-align: center; margin-top: 16px; font-size: 0.7em; color: var(--text-sub); line-height: 1.7; }
+
+/* ── RESULT: SCENARIO ── */
+.scenario-result-item { margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--glass-border); }
+.scenario-result-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.scenario-result-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+.scenario-result-icon { font-size: 1.1em; }
+.scenario-result-title { font-size: 0.88em; font-weight: 700; flex: 1; color: var(--text); }
+.judge-result-badge { font-size: 0.72em; font-weight: 800; padding: 2px 9px; border-radius: 20px; white-space: nowrap; }
+.judge-result-yes { background: rgba(5,150,105,0.1); color: var(--green); border: 1px solid rgba(5,150,105,0.28); }
+.judge-result-no { background: rgba(220,38,38,0.07); color: var(--red); border: 1px solid rgba(220,38,38,0.22); }
+.scenario-result-reason { font-size: 0.82em; color: var(--text-sub); line-height: 1.5; background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 6px; padding: 5px 9px; margin-top: 4px; }
+
+/* ── RESULT: REFLECTION ── */
+.reflect-result-item { margin-bottom: 10px; }
+.reflect-result-item:last-child { margin-bottom: 0; }
+.reflect-result-label { font-size: 0.75em; font-weight: 800; color: var(--blue); margin-bottom: 4px; letter-spacing: 0.5px; }
+.reflect-result-text { font-size: 0.85em; line-height: 1.6; color: var(--text); background: var(--bg-card); border: 1px solid var(--glass-border); border-radius: 8px; padding: 8px 11px; }
+
+/* ── WARNINGS ── */
+.warn {
+  background: rgba(220,38,38,0.07); border: 1px solid rgba(220,38,38,0.28);
+  border-radius: 8px; padding: 9px 12px; font-size: 0.82em;
+  text-align: center; margin-top: 8px; display: none; color: var(--red);
+}
+.warn.show { display: block; }
+.divider { height: 1px; background: var(--glass-border); margin: 12px 0; }
+/* iPhone X+ 홈 바 영역 확보 (safe area inset) */
+.spacer { height: calc(24px + env(safe-area-inset-bottom, 0px)); }
+.header { padding-left: max(16px, env(safe-area-inset-left, 16px)); padding-right: max(16px, env(safe-area-inset-right, 16px)); }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 0: WELCOME                       -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-0" class="screen active">
+  <div class="body">
+    <div class="welcome-icon">🗳️</div>
+    <div class="welcome-title">나의 정치란<br>무엇인가 탐구</div>
+    <div class="welcome-sub">강의 내용을 바탕으로<br>나만의 정치 정의를 만들어보세요</div>
+    <ul class="steps-card">
+      <li><span class="step-num">1</span><span><strong>철학자 매칭</strong> — 공감하는 철학자의 정의 최대 3개 + 이유</span></li>
+      <li><span class="step-num">2</span><span><strong>유형 진단</strong> — 4가지 질문 답변 + 이유</span></li>
+      <li><span class="step-num">3</span><span><strong>내가 생각하는 정치란?</strong> — 6요소 선택 + 이유</span></li>
+      <li><span class="step-num">4</span><span><strong>현실 판단</strong> — "이것도 정치인가?" 4장면 판단</span></li>
+      <li><span class="step-num">5</span><span><strong>성찰</strong> — 강의 전·후 내 생각 비교</span></li>
+    </ul>
+    <div class="welcome-result-note">🎯 완료 후 나만의 정치 유형 카드가 완성됩니다</div>
+    <button class="btn" onclick="goTo(1)">시작하기 →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 1: PHILOSOPHER MATCHING          -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-1" class="screen">
+  <div class="header">
+    <div class="header-phase">Step 1 / 5 · 철학자 매칭</div>
+    <h2>나와 비슷한 정의를 찾아보세요</h2>
+  </div>
+  <div class="progress-wrap">
+    <div class="progress-steps">
+      <div class="progress-step active"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+    </div>
+    <div class="progress-label">1 / 5</div>
+  </div>
+  <div class="body">
+    <div class="phil-intro">공감하는 철학자의 정의를 <strong>최대 3개</strong>까지 선택하고, 각각 선택한 이유를 적어보세요.</div>
+    <div class="sel-counter-bar">
+      <div class="sel-counter">
+        <span>선택</span>
+        <div class="sel-dots">
+          <div class="sel-dot" id="dot-0"></div>
+          <div class="sel-dot" id="dot-1"></div>
+          <div class="sel-dot" id="dot-2"></div>
+        </div>
+        <span id="sel-count-text">0 / 3</span>
+      </div>
+      <div class="sel-hint">카드를 다시 누르면 취소</div>
+    </div>
+    <div class="phil-grid" id="phil-grid"></div>
+    <div id="warn-phil" class="warn">⚠️ 철학자를 최소 1명 선택해주세요</div>
+    <div id="warn-phil-max" class="warn">⚠️ 최대 3개까지 선택할 수 있습니다</div>
+    <div class="sel-section" id="sel-section">
+      <div class="sel-section-title">✓ 선택한 철학자 — 이유 작성</div>
+      <div id="reasons-list"></div>
+    </div>
+    <button class="btn" onclick="nextFromPhil()" style="margin-top:14px;">다음 단계 →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 2: TYPE DIAGNOSTIC               -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-2" class="screen">
+  <div class="header">
+    <div class="header-phase">Step 2 / 5 · 유형 진단</div>
+    <h2>나의 정치 정의 유형은?</h2>
+  </div>
+  <div class="progress-wrap">
+    <button class="back-btn" onclick="backTo1()">← 이전 단계</button>
+    <div class="progress-steps" style="margin-left:8px;">
+      <div class="progress-step done"></div>
+      <div class="progress-step active"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+    </div>
+    <div class="progress-label" id="q-progress">2 / 5</div>
+  </div>
+  <div class="body" id="q-body"></div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 3: DEFINITION BUILDER            -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-3" class="screen">
+  <div class="header">
+    <div class="header-phase">Step 3 / 5 · 내가 생각하는 정치란?</div>
+    <h2>나만의 정치 정의 완성</h2>
+  </div>
+  <div class="progress-wrap">
+    <button class="back-btn" onclick="backTo2()">← 이전 단계</button>
+    <div class="progress-steps" style="margin-left:8px;">
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step active"></div>
+      <div class="progress-step"></div>
+      <div class="progress-step"></div>
+    </div>
+    <div class="progress-label">3 / 5</div>
+  </div>
+  <div class="body">
+    <div class="builder-intro">6가지 요소를 직접 선택하고 <strong>이유를 적어</strong> 나만의 정치 정의를 완성하세요.</div>
+    <div id="builder-body"></div>
+    <div id="warn-builder" class="warn">⚠️ 모든 항목(6개)을 선택해주세요</div>
+    <button class="btn" onclick="nextFromBuilder()" style="margin-top:16px;">다음 단계 →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 4: SCENARIO JUDGMENT             -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-4" class="screen">
+  <div class="header">
+    <div class="header-phase">Step 4 / 5 · 현실 판단</div>
+    <h2>이것도 정치인가?</h2>
+  </div>
+  <div class="progress-wrap">
+    <button class="back-btn" onclick="backTo3()">← 이전 단계</button>
+    <div class="progress-steps" style="margin-left:8px;">
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step active"></div>
+      <div class="progress-step"></div>
+    </div>
+    <div class="progress-label">4 / 5</div>
+  </div>
+  <div class="body">
+    <div class="scenarios-intro">내가 만든 정의를 기준으로, 아래 장면이 <strong>정치인지 아닌지</strong> 판단하고 이유를 적어보세요.</div>
+    <div id="scenario-body"></div>
+    <div id="warn-scenario" class="warn">⚠️ 모든 장면에 판단을 선택해주세요</div>
+    <button class="btn" onclick="nextFromScenario()" style="margin-top:16px;">다음 단계 →</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 5: REFLECTION                    -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-5" class="screen">
+  <div class="header">
+    <div class="header-phase">Step 5 / 5 · 성찰</div>
+    <h2>강의 전·후 내 생각</h2>
+  </div>
+  <div class="progress-wrap">
+    <button class="back-btn" onclick="backTo4()">← 이전 단계</button>
+    <div class="progress-steps" style="margin-left:8px;">
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step active"></div>
+    </div>
+    <div class="progress-label">5 / 5</div>
+  </div>
+  <div class="body">
+    <div class="reflect-intro">강의를 통해 내 생각이 어떻게 바뀌었는지 짧게 적어보세요. (선택 사항)</div>
+    <div class="reflect-group">
+      <div class="reflect-q">💭 강의를 듣기 전, 나에게 정치란...</div>
+      <textarea id="reflect-before" class="reason-textarea" rows="3"
+                placeholder="강의 전 내가 생각했던 정치의 의미를 떠올려 보세요..."></textarea>
+    </div>
+    <div class="reflect-group">
+      <div class="reflect-q">✨ 오늘 강의 후, 달라진 점이 있다면...</div>
+      <textarea id="reflect-after" class="reason-textarea" rows="3"
+                placeholder="새롭게 알게 된 것, 생각이 바뀐 부분을 자유롭게 적어보세요..."></textarea>
+    </div>
+    <div class="reflect-group">
+      <div class="reflect-q">🤔 정치에 무관심하면 나에게 주어지는 결과는 어떤 의미가 있을까요?</div>
+      <textarea id="reflect-indiff" class="reason-textarea" rows="3"
+                placeholder="정치와 나의 관계에 대해 솔직하게 생각해보세요..."></textarea>
+    </div>
+    <button class="btn" onclick="nextFromReflect()" style="margin-top:8px;">결과 보기 🎯</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- SCREEN 6: RESULT                        -->
+<!-- ═══════════════════════════════════════ -->
+<div id="screen-6" class="screen">
+  <div class="header">
+    <div class="header-phase">완료! · 결과 카드</div>
+    <h2>나의 정치 정의 카드</h2>
+  </div>
+  <div class="progress-wrap">
+    <button class="back-btn" onclick="backTo5()">← 수정하기</button>
+    <div class="progress-steps" style="margin-left:8px;">
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+      <div class="progress-step done"></div>
+    </div>
+    <div class="progress-label">완료 ✓</div>
+  </div>
+  <div class="body">
+    <div class="result-outer">
+      <div class="result-top">
+        <div class="result-badge" id="r-code">----</div>
+        <div class="result-nickname" id="r-nickname"></div>
+        <div class="result-tag-row" id="r-tags"></div>
+      </div>
+
+      <div class="r-section">
+        <div class="r-sec-title">🏛️ 내가 공감한 철학자</div>
+        <div id="r-phils"></div>
+      </div>
+
+      <div class="r-section">
+        <div class="r-sec-title">🔍 나의 정치 정의 유형</div>
+        <div class="type-dims" id="r-dims"></div>
+        <div id="r-q-reasons"></div>
+      </div>
+
+      <div class="r-section">
+        <div class="r-sec-title">✍️ 내가 생각하는 정치란?</div>
+        <div class="my-def" id="r-def"></div>
+        <div id="r-build-reasons"></div>
+      </div>
+
+      <div class="r-section">
+        <div class="r-sec-title">⚖️ 이것도 정치인가? — 나의 판단</div>
+        <div id="r-scenarios"></div>
+      </div>
+
+      <div class="r-section">
+        <div class="r-sec-title">💭 나의 성찰</div>
+        <div id="r-reflect"></div>
+      </div>
+
+      <div class="result-footer">
+        정치학개론 · 정치사상 섹션 · 경상국립대학교
+      </div>
+    </div>
+    <button class="btn ghost" onclick="restart()">🔄 처음부터 다시</button>
+    <div class="spacer"></div>
+  </div>
+</div>
+
+<script>
+// ════════════════════════════════════════════
+//  DATA
+// ════════════════════════════════════════════
+
+const PHILOSOPHERS = [
+  { name:"플라톤",       def:"철인왕이 지배하여 사회를 조화롭고 정의롭게 만들기" },
+  { name:"아리스토텔레스",def:"시민이 공동선을 추구하는 지배 행위" },
+  { name:"마키아벨리",   def:"권력을 획득하고 유지" },
+  { name:"홉스",         def:"권위적 결정과 강제" },
+  { name:"로크",         def:"생명, 자유, 재산의 보호" },
+  { name:"루소",         def:"일반의지의 실현을 통한 자유와 평등 추구" },
+  { name:"칸트",         def:"법치주의를 통해 자유와 자율성을 실현" },
+  { name:"마르크스",     def:"계급투쟁의 산물, 자본가 운영위원회" },
+  { name:"베버",         def:"합법적 폭력을 독점하고 행사하는 과정" },
+  { name:"아렌트",       def:"공공의 영역에서 자유롭게 행동" },
+  { name:"슈미트",       def:"친구와 적을 구분하는 일" },
+  { name:"이스턴",       def:"사회적 가치의 권위적 배분" },
+  { name:"알몬드",       def:"요구와 이익 수렴, 정책으로 변환, 피드백" },
+  { name:"파슨즈",       def:"갈등 조정, 질서 유지, 목적 달성" },
+  { name:"라스웰",       def:"누가 무엇을, 언제, 어떻게 얻는가" },
+  { name:"사르토리",     def:"집단적 의사결정을 위한 협력과 갈등" },
+  { name:"푸코",         def:"권력관계의 작동 방식, 권력의 행사와 저항" },
+  { name:"그람시",       def:"문화적 헤게모니를 통해 사회를 통제" },
+  { name:"롤스",         def:"사회적 정의를 실현하기 위한 공정한 협력" },
+  { name:"크릭",         def:"제도를 통해 차이와 갈등 조절 관리" },
+  { name:"하버마스",     def:"의사소통과 담론이 이루어지는 공론장" },
+  { name:"쉬블리",       def:"권력의 사용을 통한 집단적 의사 결정 행위" },
+  { name:"랑시에르",     def:"기존 질서에 도전하며 권력의 평등을 주장" },
+  { name:"무페",         def:"갈등과 대립이 경합하는 과정" },
+  { name:"버틀러",       def:"사회적 규범과 정체성을 구성, 변화시키는 과정" }
+];
+
+const QUESTIONS = [
+  { dim:'e', label:"정치의 범위", num:"1 / 4", dimLabel:"범위",
+    q:"정치는 주로 어디서 일어난다고 생각하나요?",
+    opts:[
+      { v:'E', badge:"협의적", text:"국회·정당·선거 같은 공식적인 정치 제도 안에서" },
+      { v:'I', badge:"광의적", text:"학교·직장·가족 등 권력이 작동하는 모든 공간에서" }
+    ]
+  },
+  { dim:'s', label:"정치의 접근", num:"2 / 4", dimLabel:"접근",
+    q:"정치를 볼 때 무엇이 더 중요하다고 생각하나요?",
+    opts:[
+      { v:'S', badge:"현실적", text:"권력이 실제로 어떻게 작동하는가 (도덕과 무관하게)" },
+      { v:'N', badge:"이상적", text:"정치가 어떠해야 하는가, 정당성과 도덕성" }
+    ]
+  },
+  { dim:'t', label:"정치의 인식", num:"3 / 4", dimLabel:"인식",
+    q:"정치를 이해하는 가장 좋은 방법은?",
+    opts:[
+      { v:'T', badge:"기능적", text:"투입-산출 구조로 안정적·예측 가능하게 분석" },
+      { v:'F', badge:"과정적", text:"역사적 흐름과 예측 불가한 역동적 변화를 따라가며 이해" }
+    ]
+  },
+  { dim:'j', label:"정치의 평가", num:"4 / 4", dimLabel:"평가",
+    q:"정치를 공부하는 이유는?",
+    opts:[
+      { v:'J', badge:"비판적", text:"잘못된 권력을 비판하고 올바른 방향을 주장하기 위해" },
+      { v:'P', badge:"분석적", text:"권력이 어떻게 작동하는지 객관적으로 설명하기 위해" }
+    ]
+  }
+];
+
+const ELEMENTS = [
+  { id:'space', label:"① 공간", full:"한 공동체 안에서", opts:[
+    { v:'a', t:"국가 내부의 공식적인 정치 제도" },
+    { v:'b', t:"국가 내부의 사회 전체" },
+    { v:'c', t:"국가를 넘어선 국제 관계의 장" }
+  ]},
+  { id:'agent', label:"② 주체", full:"다수의 세력이", opts:[
+    { v:'a', t:"공식적 권력을 가진 정치인과 국가 기관이" },
+    { v:'b', t:"시민과 시민사회 세력이" },
+    { v:'c', t:"인플루언서·미디어 등 문화 세력이" }
+  ]},
+  { id:'env', label:"③ 환경", full:"의견이 불일치할 때", opts:[
+    { v:'a', t:"자원이 부족하여 이해관계가 충돌할 때" },
+    { v:'b', t:"가치관과 의견이 달라 합의가 필요할 때" },
+    { v:'c', t:"권력의 불균형이 생겨 강제가 필요할 때" }
+  ]},
+  { id:'goal', label:"④ 목적", full:"실현하기 위해", opts:[
+    { v:'a', t:"안보와 안전 같은 기본적 필요를 충족하기 위해" },
+    { v:'b', t:"자유·평등·정의 같은 이상을 실현하기 위해" },
+    { v:'c', t:"특정 집단의 이익을 보호하고 확대하기 위해" }
+  ]},
+  { id:'content', label:"⑤ 내용", full:"집단의 규범을 결정하고 강제하는", opts:[
+    { v:'a', t:"규범(법·헌법)을 만들고 강제하는 것" },
+    { v:'b', t:"사회적 가치를 권위 있게 배분하는 것" },
+    { v:'c', t:"갈등을 조정하고 공동체의 질서를 유지하는 것" }
+  ]},
+  { id:'essence', label:"⑥ 본질", full:"권력을 행사하는 모든 활동", opts:[
+    { v:'a', t:"합법적 강제력·공권력을 통해" },
+    { v:'b', t:"다수의 동의와 민주적 선출을 통해" },
+    { v:'c', t:"설득·담론·문화적 영향력을 통해" }
+  ]}
+];
+
+const SCENARIOS = [
+  { id:0, icon:"🏛️", title:"국회 표결",
+    desc:"국회에서 의원들이 내년도 예산안을 표결로 결정한다." },
+  { id:1, icon:"🏢", title:"직장 내 배분",
+    desc:"팀장이 팀원들에게 프로젝트를 배정하고 성과급을 차등 지급한다." },
+  { id:2, icon:"📱", title:"인플루언서의 영향력",
+    desc:"유명 SNS 인플루언서가 특정 소비 습관을 권장하며 대중의 생활방식에 영향을 미친다." },
+  { id:3, icon:"🏠", title:"가족 내 결정",
+    desc:"가족 회의에서 가사 분담과 이번 달 생활비 사용처를 결정한다." }
+];
+
+const TYPE_LABELS = {
+  E:"협의적 (공식 제도 중심)", I:"광의적 (모든 권력 공간)",
+  S:"현실적 (합리성·무도덕성)", N:"이상적 (정당성·도덕성)",
+  T:"기능적 (투입/산출·안정)", F:"과정적 (역사·역동성)",
+  J:"비판적 (주장·권력 비판)", P:"분석적 (설명·권력 분석)"
+};
+
+const NICKNAMES = {
+  ESTP:"현실주의 분석가", ESTJ:"질서의 수호자",
+  ENTP:"이상적 개혁가",  ENTJ:"철인왕형 지도자",
+  ISTP:"냉철한 분석가",  ISTJ:"체계적 관리자",
+  INTP:"공정한 이론가",  INTJ:"전략적 비판가",
+  ESFP:"역동적 현실가",  ESFJ:"공동체 실천가",
+  ENFP:"자유로운 행동가",ENFJ:"공동체 개혁가",
+  ISFP:"현실적 자유 분석가", ISFJ:"비판적 현실주의자",
+  INFP:"담론적 이상주의자",  INFJ:"연대적 이상주의자"
+};
+
+const BUILD_SENTENCE_MAP = {
+  space:  { a:"국가 내부의 공식적인 정치 제도", b:"국가 내부의 사회 전체", c:"국제 관계의 장" },
+  agent:  { a:"공식적 권력을 가진 정치인과 국가 기관이", b:"시민과 시민사회 세력이", c:"인플루언서·미디어 등 문화 세력이" },
+  env:    { a:"자원 부족으로 이해관계가 충돌할 때", b:"가치관과 의견이 달라 합의가 필요할 때", c:"권력 불균형으로 강제가 필요할 때" },
+  goal:   { a:"안보와 안전 같은 기본적 필요를 충족하기 위해", b:"자유·평등·정의를 실현하기 위해", c:"특정 집단의 이익을 지키기 위해" },
+  content:{ a:"규범(법·헌법)을 결정하고 강제하는 과정에서", b:"사회적 가치를 권위 있게 배분하는 과정에서", c:"갈등을 조정하고 질서를 유지하는 과정에서" },
+  essence:{ a:"공권력을 통해 권력을 행사하는 모든 활동", b:"민주적 동의를 통해 권력을 행사하는 모든 활동", c:"설득·담론·문화 영향력으로 권력을 행사하는 모든 활동" }
+};
+
+// ════════════════════════════════════════════
+//  STATE
+// ════════════════════════════════════════════
+
+let selPhils      = [];
+let philReasons   = {};
+let ans           = { e:null, s:null, t:null, j:null };
+let qReasons      = {};
+let build         = {};
+let buildReasons  = {};
+let curQ          = 0;
+let scenarioJudge = {};   // { 0: true/false }
+let scenarioReasons = {}; // { 0: "reason" }
+let reflectBefore = '';
+let reflectAfter  = '';
+let reflectIndiff = '';
+
+// ════════════════════════════════════════════
+//  INIT
+// ════════════════════════════════════════════
+
+(function init() {
+  document.getElementById('phil-grid').innerHTML = PHILOSOPHERS.map((p, i) =>
+    `<div class="phil-card" id="pc${i}" onclick="pickPhil(${i})">
+       <span class="phil-check">✓</span>
+       <div class="phil-name">${p.name}</div>
+       <div class="phil-def">${p.def}</div>
+     </div>`
+  ).join('');
+
+  document.getElementById('builder-body').innerHTML = ELEMENTS.map(el =>
+    `<div class="el-group">
+       <div class="el-label">${el.label} — ${el.full}</div>
+       <div class="el-opts">
+         ${el.opts.map(o =>
+           `<div class="el-opt" id="eo-${el.id}-${o.v}" onclick="pickEl('${el.id}','${o.v}',this)">
+              ${o.t}
+            </div>`
+         ).join('')}
+       </div>
+       <div class="reason-group">
+         <div class="reason-label">✏️ 이 선택의 이유</div>
+         <textarea id="br-${el.id}" class="reason-textarea" rows="2"
+                   placeholder="왜 이 항목을 선택했나요? 간단히 적어보세요..."></textarea>
+       </div>
+     </div>`
+  ).join('');
+})();
+
+// ════════════════════════════════════════════
+//  STEP 1: PHILOSOPHER MATCHING
+// ════════════════════════════════════════════
+
+function pickPhil(i) {
+  const idx = selPhils.indexOf(i);
+  const card = document.getElementById('pc' + i);
+  if (idx > -1) {
+    saveCurrentReasons();
+    selPhils.splice(idx, 1);
+    delete philReasons[i];
+    card.classList.remove('selected');
+  } else {
+    if (selPhils.length >= 3) {
+      document.getElementById('warn-phil-max').classList.add('show');
+      setTimeout(() => document.getElementById('warn-phil-max').classList.remove('show'), 2000);
+      return;
+    }
+    saveCurrentReasons();
+    selPhils.push(i);
+    card.classList.add('selected');
+  }
+  updateCardDimming();
+  updateCounter();
+  updateReasonSection();
+  document.getElementById('warn-phil').classList.remove('show');
+}
+
+function updateCardDimming() {
+  PHILOSOPHERS.forEach((_, i) => {
+    const card = document.getElementById('pc' + i);
+    card.classList.toggle('dimmed', selPhils.length >= 3 && !selPhils.includes(i));
+  });
+}
+
+function updateCounter() {
+  const n = selPhils.length;
+  document.getElementById('sel-count-text').textContent = n + ' / 3';
+  for (let d = 0; d < 3; d++) {
+    document.getElementById('dot-' + d).classList.toggle('filled', d < n);
+  }
+}
+
+function saveCurrentReasons() {
+  selPhils.forEach(i => {
+    const ta = document.getElementById('reason-ta-' + i);
+    if (ta) philReasons[i] = ta.value;
+  });
+}
+
+function updateReasonSection() {
+  const section = document.getElementById('sel-section');
+  const list = document.getElementById('reasons-list');
+  if (selPhils.length === 0) { section.classList.remove('visible'); return; }
+  section.classList.add('visible');
+  list.innerHTML = selPhils.map((i, si) => {
+    const p = PHILOSOPHERS[i];
+    return `${si > 0 ? '<div class="divider"></div>' : ''}
+      <div class="reason-item">
+        <div class="reason-phil-name">${p.name}</div>
+        <div class="reason-phil-def-small">"${p.def}"</div>
+        <div class="reason-group">
+          <div class="reason-label">✏️ 선택 이유</div>
+          <textarea id="reason-ta-${i}" class="reason-textarea" rows="2"
+                    onclick="event.stopPropagation()"
+                    placeholder="이 정의를 선택한 이유를 간단히 적어보세요...">${philReasons[i] || ''}</textarea>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function nextFromPhil() {
+  if (selPhils.length === 0) {
+    document.getElementById('warn-phil').classList.add('show');
+    return;
+  }
+  saveCurrentReasons();
+  curQ = 0;
+  renderQ(0);
+  goTo(2);
+}
+
+// ════════════════════════════════════════════
+//  STEP 2: TYPE DIAGNOSTIC
+// ════════════════════════════════════════════
+
+function renderQ(idx) {
+  const q = QUESTIONS[idx];
+  curQ = idx;
+  document.getElementById('q-progress').textContent = '2 / 5';
+  const isLast = (idx === QUESTIONS.length - 1);
+  const savedReason = qReasons[q.dim] || '';
+
+  document.getElementById('q-body').innerHTML =
+    `<div>
+       <div class="q-meta">${q.num} 문항</div>
+       <div class="q-label">${q.label}</div>
+       <div class="q-text">${q.q}</div>
+       <div class="options">
+         ${q.opts.map(o =>
+           `<button class="opt-btn ${ans[q.dim] === o.v ? 'selected' : ''}"
+                    onclick="pickAns('${q.dim}','${o.v}',${idx},this)">
+              <div class="opt-badge">${o.badge}</div>
+              ${o.text}
+            </button>`
+         ).join('')}
+       </div>
+       <div class="reason-group">
+         <div class="reason-label">✏️ 이 선택의 이유</div>
+         <textarea id="q-reason-${idx}" class="reason-textarea" rows="2"
+                   placeholder="왜 이 항목을 선택했나요? 간단히 적어보세요...">${savedReason}</textarea>
+       </div>
+       <div id="warn-q" class="warn">⚠️ 항목을 먼저 선택해주세요</div>
+       <div class="q-nav-row">
+         ${idx > 0
+           ? `<button class="btn ghost" onclick="goBackQ(${idx})">← 이전 문항</button>`
+           : `<div></div>`}
+         <button class="btn" onclick="nextQ(${idx})">
+           ${isLast ? '다음 단계 →' : '다음 문항 →'}
+         </button>
+       </div>
+       <div class="spacer"></div>
+     </div>`;
+}
+
+function pickAns(dim, val, idx, el) {
+  ans[dim] = val;
+  document.querySelectorAll('.opt-btn').forEach(b => b.classList.remove('selected'));
+  if (el) el.classList.add('selected');
+  const warn = document.getElementById('warn-q');
+  if (warn) warn.classList.remove('show');
+}
+
+function nextQ(idx) {
+  const q = QUESTIONS[idx];
+  if (!ans[q.dim]) {
+    document.getElementById('warn-q').classList.add('show');
+    return;
+  }
+  const ta = document.getElementById('q-reason-' + idx);
+  if (ta) qReasons[q.dim] = ta.value;
+  if (idx < QUESTIONS.length - 1) {
+    renderQ(idx + 1);
+  } else {
+    renderBuilderState();
+    goTo(3);
+  }
+}
+
+function goBackQ(idx) {
+  const q = QUESTIONS[idx];
+  const ta = document.getElementById('q-reason-' + idx);
+  if (ta) qReasons[q.dim] = ta.value;
+  renderQ(idx - 1);
+}
+
+// ════════════════════════════════════════════
+//  STEP 3: DEFINITION BUILDER
+// ════════════════════════════════════════════
+
+function renderBuilderState() {
+  ELEMENTS.forEach(el => {
+    if (build[el.id]) {
+      const opt = document.getElementById(`eo-${el.id}-${build[el.id]}`);
+      if (opt) opt.classList.add('selected');
+    }
+    const ta = document.getElementById('br-' + el.id);
+    if (ta) ta.value = buildReasons[el.id] || '';
+  });
+}
+
+function pickEl(id, val, elDiv) {
+  elDiv.closest('.el-opts').querySelectorAll('.el-opt')
+       .forEach(e => e.classList.remove('selected'));
+  elDiv.classList.add('selected');
+  build[id] = val;
+  document.getElementById('warn-builder').classList.remove('show');
+}
+
+function saveBuilderReasons() {
+  ELEMENTS.forEach(el => {
+    const ta = document.getElementById('br-' + el.id);
+    if (ta) buildReasons[el.id] = ta.value;
+  });
+}
+
+function nextFromBuilder() {
+  const missing = ELEMENTS.filter(el => !build[el.id]);
+  if (missing.length) {
+    document.getElementById('warn-builder').classList.add('show');
+    document.getElementById(`eo-${missing[0].id}-a`)
+      ?.closest('.el-group')?.scrollIntoView({ behavior:'smooth' });
+    return;
+  }
+  saveBuilderReasons();
+  renderScenarios();
+  goTo(4);
+}
+
+// ════════════════════════════════════════════
+//  STEP 4: SCENARIO JUDGMENT
+// ════════════════════════════════════════════
+
+function renderScenarios() {
+  document.getElementById('scenario-body').innerHTML = SCENARIOS.map(sc =>
+    `<div class="scenario-card" id="sc-card-${sc.id}">
+       <div class="scenario-header">
+         <span class="scenario-icon">${sc.icon}</span>
+         <span class="scenario-title">${sc.title}</span>
+       </div>
+       <div class="scenario-desc">${sc.desc}</div>
+       <div class="scenario-judge-row">
+         <button class="judge-btn ${scenarioJudge[sc.id] === true ? 'selected-yes' : ''}"
+                 onclick="pickScenario(${sc.id}, true, this)">✅ 정치다</button>
+         <button class="judge-btn ${scenarioJudge[sc.id] === false ? 'selected-no' : ''}"
+                 onclick="pickScenario(${sc.id}, false, this)">❌ 아니다</button>
+       </div>
+       <div class="reason-group">
+         <div class="reason-label">✏️ 이유 (선택)</div>
+         <textarea id="sr-${sc.id}" class="reason-textarea" rows="2"
+                   placeholder="왜 그렇게 생각했나요?">${scenarioReasons[sc.id] || ''}</textarea>
+       </div>
+     </div>`
+  ).join('');
+}
+
+function pickScenario(id, val, el) {
+  scenarioJudge[id] = val;
+  const card = el.closest('.scenario-card');
+  card.querySelectorAll('.judge-btn').forEach(b => b.classList.remove('selected-yes', 'selected-no'));
+  el.classList.add(val ? 'selected-yes' : 'selected-no');
+  document.getElementById('warn-scenario').classList.remove('show');
+}
+
+function saveScenarioReasons() {
+  SCENARIOS.forEach(sc => {
+    const ta = document.getElementById('sr-' + sc.id);
+    if (ta) scenarioReasons[sc.id] = ta.value;
+  });
+}
+
+function nextFromScenario() {
+  const missing = SCENARIOS.filter(sc => scenarioJudge[sc.id] === undefined);
+  if (missing.length > 0) {
+    document.getElementById('warn-scenario').classList.add('show');
+    document.getElementById('sc-card-' + missing[0].id)
+      ?.scrollIntoView({ behavior:'smooth' });
+    return;
+  }
+  saveScenarioReasons();
+  // 성찰 화면 값 복원
+  document.getElementById('reflect-before').value = reflectBefore;
+  document.getElementById('reflect-after').value  = reflectAfter;
+  document.getElementById('reflect-indiff').value = reflectIndiff;
+  goTo(5);
+}
+
+// ════════════════════════════════════════════
+//  STEP 5: REFLECTION
+// ════════════════════════════════════════════
+
+function saveReflections() {
+  const b = document.getElementById('reflect-before');
+  const a = document.getElementById('reflect-after');
+  const c = document.getElementById('reflect-indiff');
+  if (b) reflectBefore = b.value;
+  if (a) reflectAfter  = a.value;
+  if (c) reflectIndiff = c.value;
+}
+
+function nextFromReflect() {
+  saveReflections();
+  showResult();
+}
+
+// ════════════════════════════════════════════
+//  RESULT
+// ════════════════════════════════════════════
+
+function showResult() {
+  // 1. 유형 코드
+  const code = [ans.e||'?', ans.s||'?', ans.t||'?', ans.j||'?'].join('');
+  document.getElementById('r-code').textContent = code;
+  document.getElementById('r-nickname').textContent = NICKNAMES[code] || '나만의 유형';
+
+  // 2. 태그
+  document.getElementById('r-tags').innerHTML =
+    [ans.e, ans.s, ans.t, ans.j].filter(Boolean)
+      .map(l => `<span class="result-tag">${TYPE_LABELS[l]}</span>`).join('');
+
+  // 3. 철학자 목록 + 이유
+  document.getElementById('r-phils').innerHTML = selPhils.map(i => {
+    const p = PHILOSOPHERS[i];
+    const reason = (philReasons[i] || '').trim();
+    return `<div class="phil-match-item">
+      <div class="phil-match-name">${p.name}</div>
+      <div class="phil-match-def">"${p.def}"</div>
+      ${reason ? `<div class="phil-match-reason">
+        <div class="phil-match-reason-label">✏️ 선택 이유</div>${reason}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  // 4. 유형 차원
+  document.getElementById('r-dims').innerHTML =
+    [{dim:'e',label:'범위'},{dim:'s',label:'접근'},
+     {dim:'t',label:'인식'},{dim:'j',label:'평가'}]
+    .map(d => `<div class="type-dim-item">
+        <div class="type-dim-label">${d.label}</div>
+        ${ans[d.dim] ? TYPE_LABELS[ans[d.dim]] : '—'}
+      </div>`).join('');
+
+  // 5. 유형 진단 이유
+  const qReasonsHtml = QUESTIONS
+    .filter(q => (qReasons[q.dim] || '').trim())
+    .map(q => `<div class="mini-reason">
+        <span class="mini-reason-dim">${q.dimLabel}</span>${qReasons[q.dim]}
+      </div>`).join('');
+  document.getElementById('r-q-reasons').innerHTML = qReasonsHtml;
+
+  // 6. 나만의 정의 문장
+  document.getElementById('r-def').textContent = buildSentence();
+
+  // 7. 빌더 이유
+  const buildReasonsHtml = ELEMENTS
+    .filter(el => (buildReasons[el.id] || '').trim())
+    .map(el => {
+      const choiceText = BUILD_SENTENCE_MAP[el.id][build[el.id]] || '';
+      return `<div class="build-reason-item">
+        <div class="build-reason-el">${el.label} 선택 이유</div>
+        <div class="build-choice">→ "${choiceText}"</div>
+        ${buildReasons[el.id]}
+      </div>`;
+    }).join('');
+  document.getElementById('r-build-reasons').innerHTML = buildReasonsHtml;
+
+  // 8. 현실 판단 결과
+  document.getElementById('r-scenarios').innerHTML = SCENARIOS.map(sc => {
+    const judged = scenarioJudge[sc.id];
+    if (judged === undefined) return '';
+    const reason = (scenarioReasons[sc.id] || '').trim();
+    return `<div class="scenario-result-item">
+      <div class="scenario-result-row">
+        <span class="scenario-result-icon">${sc.icon}</span>
+        <span class="scenario-result-title">${sc.title}</span>
+        <span class="judge-result-badge ${judged ? 'judge-result-yes' : 'judge-result-no'}">
+          ${judged ? '정치다' : '아니다'}
+        </span>
+      </div>
+      ${reason ? `<div class="scenario-result-reason">${reason}</div>` : ''}
+    </div>`;
+  }).join('');
+
+  // 9. 성찰 결과
+  const beforeText = reflectBefore.trim();
+  const afterText  = reflectAfter.trim();
+  const indiffText = reflectIndiff.trim();
+  let reflectHtml = '';
+  if (beforeText) reflectHtml += `<div class="reflect-result-item">
+    <div class="reflect-result-label">📌 강의 전</div>
+    <div class="reflect-result-text">${beforeText}</div>
+  </div>`;
+  if (afterText) reflectHtml += `<div class="reflect-result-item">
+    <div class="reflect-result-label">✨ 달라진 점</div>
+    <div class="reflect-result-text">${afterText}</div>
+  </div>`;
+  if (indiffText) reflectHtml += `<div class="reflect-result-item">
+    <div class="reflect-result-label">🤔 정치 무관심의 의미</div>
+    <div class="reflect-result-text">${indiffText}</div>
+  </div>`;
+  document.getElementById('r-reflect').innerHTML =
+    reflectHtml || '<div style="color:var(--text-sub);font-size:0.85em;">작성 내용 없음</div>';
+
+  goTo(6);
+}
+
+function buildSentence() {
+  const b = build, M = BUILD_SENTENCE_MAP;
+  return `"정치란, ${M.space[b.space]} 안에서 ${M.agent[b.agent]} ${M.env[b.env]} ${M.goal[b.goal]} ${M.content[b.content]} ${M.essence[b.essence]}이다."`;
+}
+
+// ════════════════════════════════════════════
+//  NAVIGATION
+// ════════════════════════════════════════════
+
+function goTo(n) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + n).classList.add('active');
+  window.scrollTo(0, 0);
+}
+
+function backTo1() {
+  const ta = document.getElementById('q-reason-' + curQ);
+  if (ta) qReasons[QUESTIONS[curQ].dim] = ta.value;
+  goTo(1);
+  updateCounter();
+  updateReasonSection();
+}
+
+function backTo2() {
+  saveBuilderReasons();
+  const qIdx = (curQ >= 0 && curQ < QUESTIONS.length) ? curQ : QUESTIONS.length - 1;
+  renderQ(qIdx);
+  goTo(2);
+}
+
+function backTo3() {
+  // Screen 4 → Screen 3 (Builder)
+  saveScenarioReasons();
+  renderBuilderState();
+  goTo(3);
+}
+
+function backTo4() {
+  // Screen 5 → Screen 4 (Scenarios)
+  saveReflections();
+  renderScenarios();
+  goTo(4);
+}
+
+function backTo5() {
+  // Screen 6 → Screen 5 (Reflection)
+  document.getElementById('reflect-before').value = reflectBefore;
+  document.getElementById('reflect-after').value  = reflectAfter;
+  document.getElementById('reflect-indiff').value = reflectIndiff;
+  goTo(5);
+}
+
+function restart() {
+  selPhils = []; philReasons = {};
+  ans = { e:null, s:null, t:null, j:null }; qReasons = {};
+  build = {}; buildReasons = {}; curQ = 0;
+  scenarioJudge = {}; scenarioReasons = {};
+  reflectBefore = ''; reflectAfter = ''; reflectIndiff = '';
+  document.querySelectorAll('.phil-card').forEach(c => c.classList.remove('selected','dimmed'));
+  document.getElementById('sel-section').classList.remove('visible');
+  document.getElementById('reasons-list').innerHTML = '';
+  updateCounter();
+  document.querySelectorAll('.el-opt').forEach(e => e.classList.remove('selected'));
+  document.querySelectorAll('#builder-body .reason-textarea').forEach(t => t.value = '');
+  const rb = document.getElementById('reflect-before');
+  const ra = document.getElementById('reflect-after');
+  const rc = document.getElementById('reflect-indiff');
+  if (rb) rb.value = '';
+  if (rc) rc.value = '';
+  if (ra) ra.value = '';
+  goTo(0);
+}
+</script>
+</body>
+</html>
